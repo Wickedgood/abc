@@ -1,10 +1,9 @@
 <?php
-//"INSERT INTO table (id,box) VALUES (1,'box1'),(2,'box2'),(3,'box3')"
+//Live Now 28JUN12
 session_start();
 include "config.php";//Mysql information.
 include "Mysql.class.php";//Mysql Class
 include "ArmorStats.php";//Gear information
-
 
 //Setting up the ENUM for classes.						
 (String)$Class = null;
