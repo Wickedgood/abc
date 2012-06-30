@@ -25,6 +25,15 @@ if($Class == 'Wizard'){
 	$ManaName = 'Arcane Power';
 	$Mana = 100;
 }
+if($Class == 'Barbarian'){
+//TODO check this
+	$ManaName = 'Fury';
+	$Mana = 100;
+}
+if($Class == 'WitchDoctor'){
+	$ManaName = 'Mana';
+	$Mana = 140 + (10 * $_SESSION[$Class]['level']);
+}
 if($Class == 'DemonHunter'){
 	$ManaName  = 'Hatred | Discipline';
 	$Mana = 125 . ' | '. 30;
@@ -91,6 +100,7 @@ if($_POST['Mysql'] == 'Load'){
 	while ($row = mysql_fetch_assoc($loadmysql->getResult())) {
 		$_SESSION[$Class][$equipment[$row['slot']]][$row['key']] = $row['value'];
 	}
+	$info = "Gear has been loaded";
 }
 //Checking to see if the users level was updated.
 if(isset($_POST['charlevel'])){
@@ -111,12 +121,22 @@ if(isset($_POST['spec']))
 }
 //Making the dropdown menu 
 if(isset($_GET['i'])){
-	$DropDown='';
-	$DropDown .='<select name="'.$_GET['i'].'[]">';
-	foreach($ArmorStats as $k=>$v){
-		$DropDown .= '<option value="'.$k.'">'.$v.'</option>';
+	if(!isset($_GET['e'])){
+		$DropDown='';
+		$DropDown .='<select name="'.$_GET['i'].'[]">';
+		foreach($ArmorStats as $k=>$v){
+			$DropDown .= '<option value="'.$k.'">'.$v.'</option>';
+		}
+		$DropDown .='</select>';
+	}else{
+	//Here is the code to edit instead of enter
+		$DropDown='';
+		$DropDown .='<select name="'.$_GET['i'].'[]">';
+		foreach($_SESSION[$Class][$_GET['i']] as $k=>$v){
+			$DropDown .= '<option value="'.$k.'">'.$v.'</option><input type="text" value="'.$v.'"name="vipInfo['.$k.']" />';
+		}
+		$DropDown .='</select>';	
 	}
-	$DropDown .='</select>';
 }else{
 	$DropDown = "empty";
 }
@@ -142,7 +162,7 @@ if($Class == null){
 		if(!isset($_SESSION[$Class][$e])){
 			$displayitem =  'onclick="location.href=\''.$_SERVER['PHP_SELF'].'?'.$_SERVER['argv'][0].'&i='.$e.'\';" style="cursor:pointer;">';
 		}else{
-			$displayitem .= '<a href="'.$_SERVER['PHP_SELF'].'?'.htmlspecialchars($_SERVER['argv'][0]).'&d='.$e.'">'.$e.'</a><br />';
+			$displayitem .= $e.'<a href="'.$_SERVER['PHP_SELF'].'?'.htmlspecialchars($_SERVER['argv'][0]).'&d='.$e.'">D</a> <a href="'.$_SERVER['PHP_SELF'].'?'.htmlspecialchars($_SERVER['argv'][0]).'&e='.$e.'">E</a> <br />';
 
 			foreach($_SESSION[$Class][$e] as $k=>$v){
 				if($k == '1337'){
